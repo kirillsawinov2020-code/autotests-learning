@@ -1,16 +1,34 @@
 import httpx
 
-response = httpx.get("https://jsonplaceholder.typicode.com/todos/1")
-print(response.status_code)
-print(response.json())
+# payload1 = {
+#   "email": "kirill.savin0v@yandex.ru",
+#   "password": "qwerty123",
+#   "lastName": "Savinov",
+#   "firstName": "Kirill",
+#   "middleName": "Pavlovich"
+# }
+#
+# response = httpx.post("http://127.0.0.1:8000/api/v1/users", json=payload1)
+# print(response.status_code)
+# print(response.json())
 
-data = {
-    "title": "Какашка сладкая",
-    "completed": False,
-    "userId": 1
+login_payload = {
+    "email": "kirill.savin0v@yandex.ru",
+    "password": "qwerty123"
 }
 
-response = httpx.post("https://jsonplaceholder.typicode.com/todos/",json=data)
+login_response = httpx.post("http://127.0.0.1:8000/api/v1/authentication/login", json=login_payload)
+login_response_data = login_response.json()
 
-print(response.status_code)
-print(response.json())
+print("Login response:", login_response_data)
+print("Status Code:", login_response.status_code)
+
+refresh_payload = {
+    "refreshToken": login_response_data['token']['refreshToken']
+}
+
+refresh_response = httpx.post("http://127.0.0.1:8000/api/v1/authentication/refresh", json=refresh_payload)
+refresh_response_data = refresh_response.json()
+
+print("Refresh response:", refresh_response_data)
+print("Status Code:", refresh_response.status_code)
